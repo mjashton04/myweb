@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riddle Me This 🧠</title>
+  <link rel="stylesheet" type="text/css" href="/Styles/riddles.css" />
+</head>
+<body>
+
+  <div id="top"></div>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero">
+    <p class="hero-label">// can you figure it out?</p>
+    <h1>RIDDLE<br/><span>ME THIS</span></h1>
+    <p class="hero-sub">think hard. no cheating. 🧠</p>
+    <div class="hero-nav">
+      <a href="frisbee.html" class="btn btn-ghost">← back to frisbee</a>
+      <a href="index.html" class="btn btn-ghost">⌂ about me</a>
+    </div>
+  </section>
+
+
+  <!-- ══════════ CONTENT ══════════ -->
+  <div class="content">
+
+    <!-- RANDOM RIDDLE GENERATOR -->
+    <div class="section-header">
+      <div class="section-label">random mode</div>
+      <h2>THE GENERATOR</h2>
+    </div>
+
+    <div class="generator-box">
+      <div class="riddle-counter">riddle <span id="currentNum">1</span> of <span id="totalNum">20</span></div>
+      <div class="riddle-question" id="riddleQuestion">Loading your riddle...</div>
+      <div class="answer-box" id="answerBox"></div>
+      <div class="generator-controls">
+        <button class="btn btn-reveal" onclick="revealAnswer()">reveal answer</button>
+        <button class="btn btn-next" onclick="nextRiddle()">next riddle ▸</button>
+      </div>
+    </div>
+
+    <!-- SCORE TRACKER -->
+    <div class="score-row" style="margin-top: 1px;">
+      <div class="score-item">
+        <span class="score-num got-it" id="scoreGot">0</span>
+        <span class="score-label">got it</span>
+      </div>
+      <span class="score-slash">/</span>
+      <div class="score-item">
+        <span class="score-num missed" id="scoreMissed">0</span>
+        <span class="score-label">missed</span>
+      </div>
+    </div>
+    <div class="score-btns">
+      <button class="btn btn-got" onclick="scoreGot()">✓ got it</button>
+      <button class="btn btn-miss" onclick="scoreMiss()">✗ missed</button>
+      <button class="btn btn-reset" onclick="resetScore()">reset score</button>
+    </div>
+
+
+    <!-- ALL RIDDLES LIST -->
+    <div class="section-header">
+      <div class="section-label">all riddles</div>
+      <h2>BROWSE ALL 20</h2>
+    </div>
+    <p style="font-size:0.85rem; color: var(--muted); margin-bottom: 1rem;">
+      Click any riddle to reveal the answer.
+    </p>
+    <div class="riddle-list" id="riddleList"></div>
+
+
+    <!-- BOTTOM NAV -->
+    <div style="display:flex; gap: 1rem; margin-top: 3rem; flex-wrap: wrap;">
+      <a href="frisbee.html" class="btn btn-ghost">← back to frisbee</a>
+      <a href="#top" class="btn btn-purple">↑ back to top</a>
+    </div>
+
+  </div><!-- /content -->
+
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>© 2026 Matthew Ashton</span>
+    <a href="frisbee.html">← frisbee</a>
+  </footer>
+
+
+  <!-- FLOATING NAV -->
+  <div class="fixed-nav" id="fixedNav">
+    <a href="#top" class="fixed-btn fixed-btn-top">↑ top</a>
+    <a href="frisbee.html" class="fixed-btn fixed-btn-frisbee">◎ frisbee</a>
+  </div>
+
+
+  <script>
+    /* ── Riddle Data ── */
+    const riddles = [
+      {
+        q: "I have cities, but no houses live there. I have mountains, but no trees grow. I have water, but no fish swim. I have roads, but no cars drive. What am I?",
+        a: "A map."
+      },
+      {
+        q: "The more you take, the more you leave behind. What am I?",
+        a: "Footsteps."
+      },
+      {
+        q: "I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?",
+        a: "An echo."
+      },
+      {
+        q: "You see me once in June, twice in November, and not at all in May. What am I?",
+        a: "The letter 'e'."
+      },
+      {
+        q: "I'm light as a feather, yet the strongest man can't hold me for more than five minutes. What am I?",
+        a: "Breath."
+      },
+      {
+        q: "What has hands but can't clap?",
+        a: "A clock."
+      },
+      {
+        q: "The more of me there is, the less you can see. What am I?",
+        a: "Darkness (or fog)."
+      },
+      {
+        q: "I have keys but no locks. I have space but no room. You can enter, but can't go inside. What am I?",
+        a: "A keyboard."
+      },
+      {
+        q: "What comes once in a minute, twice in a moment, but never in a thousand years?",
+        a: "The letter 'm'."
+      },
+      {
+        q: "I'm tall when I'm young, and short when I'm old. What am I?",
+        a: "A candle."
+      },
+      {
+        q: "What can run but never walks, has a mouth but never talks, has a head but never weeps, and has a bed but never sleeps?",
+        a: "A river."
+      },
+      {
+        q: "David's father has three sons: Snap, Crackle, and ___. What is the name of the third son?",
+        a: "David."
+      },
+      {
+        q: "What has a neck but no head?",
+        a: "A bottle."
+      },
+      {
+        q: "I go around all the places, cities, towns and villages, but never come inside. What am I?",
+        a: "A road."
+      },
+      {
+        q: "What gets wetter the more it dries?",
+        a: "A towel."
+      },
+      {
+        q: "What has 13 hearts, but no other organs?",
+        a: "A deck of cards."
+      },
+      {
+        q: "I can fly without wings. I can cry without eyes. Wherever I go, darkness follows me. What am I?",
+        a: "A cloud."
+      },
+      {
+        q: "What begins with T, ends with T, and has T inside it?",
+        a: "A teapot."
+      },
+      {
+        q: "If you drop me I'm sure to crack, but give me a smile and I'll always smile back. What am I?",
+        a: "A mirror."
+      },
+      {
+        q: "What five-letter word becomes shorter when you add two letters to it?",
+        a: "Short. (Short + er = Shorter)"
+      }
+    ];
+
+    /* ── Generator State ── */
+    let order = [...Array(riddles.length).keys()];
+    let idx = 0;
+    let scoreGotCount = 0;
+    let scoreMissedCount = 0;
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function loadRiddle() {
+      const el = document.getElementById('riddleQuestion');
+      const ans = document.getElementById('answerBox');
+      el.classList.add('fading');
+      setTimeout(() => {
+        el.textContent = riddles[order[idx]].q;
+        document.getElementById('currentNum').textContent = idx + 1;
+        ans.textContent = '';
+        ans.classList.remove('visible');
+        el.classList.remove('fading');
+      }, 300);
+    }
+
+    function revealAnswer() {
+      const ans = document.getElementById('answerBox');
+      ans.textContent = '→ ' + riddles[order[idx]].a;
+      ans.classList.add('visible');
+    }
+
+    function nextRiddle() {
+      idx = (idx + 1) % order.length;
+      if (idx === 0) shuffle(order); // reshuffle when we loop
+      loadRiddle();
+    }
+
+    function scoreGot() {
+      scoreGotCount++;
+      document.getElementById('scoreGot').textContent = scoreGotCount;
+      nextRiddle();
+    }
+
+    function scoreMiss() {
+      scoreMissedCount++;
+      document.getElementById('scoreMissed').textContent = scoreMissedCount;
+      nextRiddle();
+    }
+
+    function resetScore() {
+      scoreGotCount = 0;
+      scoreMissedCount = 0;
+      document.getElementById('scoreGot').textContent = 0;
+      document.getElementById('scoreMissed').textContent = 0;
+    }
+
+    /* ── Build the All Riddles list ── */
+    function buildList() {
+      const list = document.getElementById('riddleList');
+      document.getElementById('totalNum').textContent = riddles.length;
+      riddles.forEach((r, i) => {
+        const item = document.createElement('div');
+        item.className = 'riddle-item';
+        item.innerHTML = `
+          <div class="riddle-item-q">
+            <span class="riddle-num">${String(i + 1).padStart(2, '0')}</span>
+            <span style="flex:1;">${r.q}</span>
+            <span class="riddle-toggle">▸</span>
+          </div>
+          <div class="riddle-item-a">→ ${r.a}</div>
+        `;
+        item.addEventListener('click', () => item.classList.toggle('open'));
+        list.appendChild(item);
+      });
+    }
+
+    /* ── Init ── */
+    shuffle(order);
+    loadRiddle();
+    buildList();
+
+    /* ── Scroll nav ── */
+    const fixedNav = document.getElementById('fixedNav');
+    window.addEventListener('scroll', () => {
+      fixedNav.classList.toggle('visible', window.scrollY > 400);
+    });
+  </script>
+
+</body>
+</html>
